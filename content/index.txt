@@ -6,36 +6,52 @@ company:    Company
 copyright:  Creative Commons
 filter:
   - erb
-  - textile
+  - maruku
   - slides
 layout: presentation
 ---
-h1. Webby S5 Generator
-
-Clever introductory text that will grab the audience's attention.
 
 
-h1. Title of the First Slide
+Writing DataMapper Adapters
+==================
+
+[Paul Sadauskas][email] a.k.a [Rando][twitter]
+
+[TheAmazingRando.com/blog][blog]
+
+[Absolute Performance, Inc][api]
+
+[email]:   psadauskas@gmail.com
+[twitter]: http://twitter.com/TheAmazingRando
+[blog]:    http://theamazingrando.com/blog
+[api]:     http://absolute-performance.com
+
+Title of the First Slide
+==================
 
 A little more build up before really getting into the meat of it.
 
 
-h1. Title of the Second Slide
+Title of the Second Slide
+==================
 
 Finally, some code!
 
 
-h1. Title of the Third Slide
+Title of the Third Slide
+==================
 
 This code comes from a partial
 
 
-h1. Title of the Fourth Slide
+Title of the Fourth Slide
+==================
 
 A quadratic equation with real or complex coefficients has two (not necessarily distinct) solutions, called roots, which may or may not be real, given by the quadratic formula:
 
 
-h1. The Final Slide
+The Final Slide
+==================
 
 And that about sums it up!
 
