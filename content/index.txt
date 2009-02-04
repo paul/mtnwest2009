@@ -1,8 +1,8 @@
 ---
-title:      Webby S5
+title:      Writing Adapters for DataMapper
 created_at: 2008-05-18 22:10:21.995012 -06:00
-author:     You
-company:    Company
+author:     Paul Sadauskas
+company:    Absolute Performance, Inc
 copyright:  Creative Commons
 filter:
   - erb
@@ -11,48 +11,58 @@ filter:
 layout: presentation
 ---
 
-
 Writing DataMapper Adapters
 ==================
 
 [Paul Sadauskas][email] a.k.a [Rando][twitter]
 
-[TheAmazingRando.com/blog][blog]
-
 [Absolute Performance, Inc][api]
 
 [email]:   psadauskas@gmail.com
 [twitter]: http://twitter.com/TheAmazingRando
-[blog]:    http://theamazingrando.com/blog
 [api]:     http://absolute-performance.com
 
-Title of the First Slide
+WTF is DataMapper?
 ==================
 
-A little more build up before really getting into the meat of it.
+A lightweight, modular Ruby ORM.
 
+Powerful adapter plugins mean its not just for RDBMSs:
 
-Title of the Second Slide
+ * Memory
+ * **Yaml files**
+ * ReSTful web services
+ * CouchDB
+ * High-speed key-value stores (TokyoCabinet)
+ {: .incremental }
+
+Who the Hell are You?
 ==================
 
-Finally, some code!
+I'm Paul Sadauskas. Find me on the intarwebs:
 
+ * irc:  Rando@irc.freenode.net
+ * xmpp: [psadauskas@gmail.com][email]
+ * www:  [TheAmazingRando.com/blog][blog]
 
-Title of the Third Slide
+DataMapper Hacker:
+
+ * Original author of `AbstractAdapter`
+ * Wrote the reference adapter, `InMemoryAdapter`
+ * Written several adapters for my company.
+
+[blog]: http://theamazingrando.com/blog
+
+What Makes Up an Adapter?
 ==================
 
-This code comes from a partial
+Just a few simple methods:
+
+ * `initialize(name, options = {})`
+ * `create(resources)`
+ * `read(query)`
+ * `update(attributes, query)`
+ * `delete(query)`
 
 
-Title of the Fourth Slide
-==================
 
-A quadratic equation with real or complex coefficients has two (not necessarily distinct) solutions, called roots, which may or may not be real, given by the quadratic formula:
-
-
-The Final Slide
-==================
-
-And that about sums it up!
-
-Thanks for visiting
