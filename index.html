@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Writing Adapters for DataMapper</title>
+   <meta name="author" content="Paul Sadauskas" />
+   <meta name="company" content="Absolute Performance, Inc" />
+
+   <!-- configuration parameters -->
+   <meta name="defaultView" content="slideshow" />
+   <meta name="controlVis" content="hidden" />
+
+   <link rel="stylesheet" href="/stylesheets/slides.css" type="text/css" media="projection" id="slideProj" />
+   <link rel="stylesheet" href="/stylesheets/outline.css" type="text/css" media="screen" id="outlineStyle" />
+
+   <!-- S5 JS -->
+   <script src="/javascripts/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+  <div id="controls"><!-- DO NOT EDIT --></div>
+  <div id="currentSlide"><!-- DO NOT EDIT --></div>
+  <div id="header">MountainWest2009</div>
+  <div id="footer">
+    <h2>Copyright &copy; Paul Sadauskas - Creative Commons</h2>
+  </div>
+</div>
+
+<div class="presentation">
+  <div class="slide">
+<h1 id='writing_datamapper_adapters'>Writing DataMapper Adapters</h1>
+
+<p><a href='psadauskas@gmail.com'>Paul Sadauskas</a> a.k.a <a href='http://twitter.com/TheAmazingRando'>Rando</a></p>
+
+<p><a href='http://absolute-performance.com'>Absolute Performance, Inc</a></p>
+
+</div>
+
+<div class="slide">
+<h1 id='wtf_is_datamapper'>WTF is DataMapper?</h1>
+
+<p>A lightweight, modular Ruby ORM.</p>
+
+<p>Powerful adapter plugins mean its not just for RDBMSs:</p>
+
+<ul class='incremental'>
+<li>Memory</li>
+
+<li><strong>Yaml files</strong></li>
+
+<li>ReSTful web services</li>
+
+<li>CouchDB</li>
+
+<li>High-speed key-value stores (TokyoCabinet)</li>
+</ul>
+
+</div>
+
+<div class="slide">
+<h1 id='who_the_hell_are_you'>Who the Hell are You?</h1>
+
+<p>I&#8217;m Paul Sadauskas. Find me on the intarwebs:</p>
+
+<ul>
+<li>irc: Rando@irc.freenode.net</li>
+
+<li>xmpp: <a href='psadauskas@gmail.com'>psadauskas@gmail.com</a></li>
+
+<li>www: <a href='http://theamazingrando.com/blog'>TheAmazingRando.com/blog</a></li>
+</ul>
+
+<p>DataMapper Hacker:</p>
+
+<ul>
+<li>Original author of <code>AbstractAdapter</code></li>
+
+<li>Wrote the reference adapter, <code>InMemoryAdapter</code></li>
+
+<li>Written several adapters for my company.</li>
+</ul>
+
+</div>
+
+<div class="slide">
+<h1 id='what_makes_up_an_adapter'>What Makes Up an Adapter?</h1>
+
+<p>Just a few simple methods:</p>
+
+<ul>
+<li><code>initialize(name, options = {})</code></li>
+
+<li><code>create(resources)</code></li>
+
+<li><code>read(query)</code></li>
+
+<li><code>update(attributes, query)</code></li>
+
+<li><code>delete(query)</code></li>
+</ul></div>
+
+
+</div>
+
+</body>
+</html>
