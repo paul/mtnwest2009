@@ -66,3 +66,18 @@ Just a few simple methods:
 
 
 
+How Did You Make this Presentation?
+==================
+
+ * [Webby]
+ * [S5]
+ * [Github Pages] to [host it][mtnwest09]
+ * [Grancher]
+
+[Webby]:        http://webby.rubyforge.org/
+[S5]:           http://meyerweb.com/eric/tools/s5/
+[Github Pages]: http://github.com/blog/272-github-pages
+[mtnwest09]:    http://paul.github.com/mtnwest2009/
+[Grancher]:     http://github.com/judofyr/grancher/tree/master
+
+
