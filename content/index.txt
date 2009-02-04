@@ -91,12 +91,16 @@ Advanced Topics
 How Did You Make this Presentation?
 ==================
 
- * [Webby]
- * [S5]
+ * [Webby] to generate it
+   * [Markdown] to author it
+   * [S5] to make slides
  * [Github Pages] to [host it][mtnwest09]
- * [Grancher]
+ * [Grancher] to publish it
+
+'t' to toggle slide layout
 
 [Webby]:        http://webby.rubyforge.org/
+[Markdown]:     http://maruku.rubyforge.org/
 [S5]:           http://meyerweb.com/eric/tools/s5/
 [Github Pages]: http://github.com/blog/272-github-pages
 [mtnwest09]:    http://paul.github.com/mtnwest2009/
