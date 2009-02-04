@@ -17,11 +17,11 @@ filter:
    <meta name="defaultView" content="slideshow" />
    <meta name="controlVis" content="hidden" />
 
-   <link rel="stylesheet" href="/stylesheets/slides.css" type="text/css" media="projection" id="slideProj" />
-   <link rel="stylesheet" href="/stylesheets/outline.css" type="text/css" media="screen" id="outlineStyle" />
+   <link rel="stylesheet" href="stylesheets/slides.css" type="text/css" media="projection" id="slideProj" />
+   <link rel="stylesheet" href="stylesheets/outline.css" type="text/css" media="screen" id="outlineStyle" />
 
    <!-- S5 JS -->
-   <script src="/javascripts/slides.js" type="text/javascript"></script>
+   <script src="javascripts/slides.js" type="text/javascript"></script>
 </head>
 <body>
 
