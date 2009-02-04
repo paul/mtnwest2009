@@ -1,0 +1,307 @@
+---
+  extension: css
+  filter: sass
+  layout: none
+---
+
+body
+  :background #000
+  :color #CCC
+  :font-size 2em
+  :margin 0
+  :padding 0
+
+
+a:link, a:visited
+  :text-decoration none
+  :color #44F
+
+
+#controls
+  :active
+    :color #88A !important
+
+  :focus
+    :outline 1px dotted #227
+
+  #navLinks a
+    :padding 0
+    :margin 0 0.5em
+    :background #005
+    :border none
+    :color #779
+    :cursor pointer
+
+  #navList
+    :height 1em
+
+    #jumplist
+      :position absolute
+      :bottom 0
+      :right 0
+      :background #DDD
+      :color #227
+
+
+h1
+  :font-size 100%
+  :margin 0
+  :padding 0
+  :font-weight inherit
+
+  abbr
+    :font-variant small-caps
+
+
+h2, h3, h4
+  :font-size 100%
+  :margin 0
+  :padding 0
+  :font-weight inherit
+
+
+ul
+  :margin 0
+  :line-height 1em
+
+  &.urls
+    :list-style none
+    :display inline
+    :margin 0
+
+
+pre
+  :margin 0
+  :line-height 1em
+
+
+html
+  :margin 0
+  :padding 0
+
+
+blockquote
+  :font-style italic
+  :padding 0 2em 0.5em
+  :margin 0 1.5em 0.5em
+  :text-align center
+  :font-size 1em
+
+  p
+    :margin 0
+
+  i
+    :font-style normal
+
+  b
+    :display block
+    :margin-top 0.5em
+    :font-weight normal
+    :font-size smaller
+    :font-style normal
+
+    i
+      :font-style italic
+
+
+q
+  :font-style italic
+
+
+kbd
+  :font-weight bold
+  :font-size 1em
+
+
+sup
+  :font-size smaller
+  :line-height 1px
+
+
+.slide
+  code
+    :padding 2px 0.25em
+    :font-weight bold
+    :color #2E2
+
+    &.bad
+      :color red
+
+    &.old
+      :color silver
+
+  pre
+    :padding 0
+    :margin 0.25em 0 0.5em 0.5em
+    :color #533
+    :font-size 90%
+
+    code
+      :display block
+
+  ul
+    :margin-left 5%
+    :margin-right 7%
+    :list-style disc
+
+    ul
+      :line-height 1
+
+      li
+        :margin .2em
+        :font-size 85%
+        :list-style square
+
+  li
+    :margin-top 0.75em
+    :margin-right 0
+
+  img.leader
+    :display block
+    :margin 0 auto
+
+  h1
+    :position absolute
+    :top 0.7em
+    :left 87px
+    :z-index 1
+    :margin 0
+    :padding 0.3em 0 0 50px
+    :white-space nowrap
+    :font bold 150%/1em Helvetica, sans-serif
+    :font-variant small-caps
+    :color #DDE
+    :background #005
+
+  h3
+    :font-size 130%
+
+  .current
+    :color #B02
+
+
+code del
+  :color red
+
+
+div
+  &#header
+    :background #005
+    :color #AAB
+    :font-family Verdana, Helvetica, sans-serif
+    :background #005
+    :line-height 1em
+
+  &#footer
+    :background #005
+    :color #AAB
+    :font-family Verdana, Helvetica, sans-serif
+    :font-size 0.5em
+    :font-weight bold
+    :padding 1em 0
+
+  &.long
+    :font-size 0.75em
+
+  &#controls
+    :position absolute
+    :left 50%
+    :bottom 0
+    :width 50%
+    :text-align right
+    :font bold 0.9em Verdana, Helvetica, sans-serif
+
+    form
+      :position absolute
+      :bottom 0
+      :right 0
+      :width 100%
+      :margin 0
+      :padding 0
+
+
+#footer
+  h1
+    :display block
+    :padding 0 1em
+
+  h2
+    :display block
+    :padding 0 1em
+    :font-style italic
+
+
+html>body
+  div#controls
+    :position fixed
+    :padding 0 0 1em 0
+    :top auto
+
+  .external
+    :border-bottom none
+
+
+#currentSlide
+  :text-align center
+  :font-size 0.5em
+  :color #449
+
+
+#slide0
+  :padding-top 3.5em
+  :font-size 90%
+
+  h1
+    :position static
+    :margin 1em 0 0
+    :padding 0
+    :font bold 2em Helvetica, sans-serif
+    :white-space normal
+    :background transparent
+
+  h2
+    :font bold italic 1em Helvetica, sans-serif
+    :margin 0.25em
+
+  h3
+    :margin-top 1.5em
+    :font-size 1.5em
+
+  h4
+    :margin-top 0
+    :font-size 1em
+
+
+.urls li
+  :display inline
+  :margin 0
+
+
+.note
+  :display none
+
+
+.external
+  :border-bottom 1px dotted gray
+
+  &:after
+    :content " \274F"
+    :font-size smaller
+    :color #77B
+
+
+.incremental
+  :color #333
+  :visibility visible
+
+  *
+    :color #333
+    :visibility visible
+
+    &:after
+      :color #DDE
+      :visibility visible
+
+
+img.incremental
+  :visibility hidden

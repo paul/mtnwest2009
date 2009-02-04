@@ -28,9 +28,9 @@ filter:
 <div class="layout">
   <div id="controls"><!-- DO NOT EDIT --></div>
   <div id="currentSlide"><!-- DO NOT EDIT --></div>
-  <div id="header"></div>
+  <div id="header">MountainWest2009</div>
   <div id="footer">
-    <h2>Copyright &copy; <%= h(@page.copyright) %></h2>
+    <h2>Copyright &copy; Paul Sadauskas - <%= h(@page.copyright) %></h2>
   </div>
 </div>
 
