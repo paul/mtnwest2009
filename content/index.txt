@@ -64,7 +64,29 @@ Just a few simple methods:
  * `update(attributes, query)`
  * `delete(query)`
 
+Initialize
+==================
 
+Create(resources)
+==================
+
+Read(query)
+==================
+
+Update(attributes, query)
+==================
+
+Delete(query)
+==================
+
+Advanced Topics
+==================
+
+ * Query
+   * Fields
+   * Conditions
+   * Order
+   * Limit
 
 How Did You Make this Presentation?
 ==================
