@@ -94,16 +94,18 @@ How Did You Make this Presentation?
  * [Webby] to generate it
    * [Markdown] to author it
    * [S5] to make slides
- * [Github Pages] to [host it][mtnwest09]
+ * [Github Pages] to [host it][mtnwest2009-pages]
+   * [Source][mtnwest2009]
  * [Grancher] to publish it
 
 't' to toggle slide layout
 
-[Webby]:        http://webby.rubyforge.org/
-[Markdown]:     http://maruku.rubyforge.org/
-[S5]:           http://meyerweb.com/eric/tools/s5/
-[Github Pages]: http://github.com/blog/272-github-pages
-[mtnwest09]:    http://paul.github.com/mtnwest2009/
-[Grancher]:     http://github.com/judofyr/grancher/tree/master
+[Webby]:              http://webby.rubyforge.org/
+[Markdown]:           http://maruku.rubyforge.org/
+[S5]:                 http://meyerweb.com/eric/tools/s5/
+[Github Pages]:       http://github.com/blog/272-github-pages
+[mtnwest2009-pages]:  http://paul.github.com/mtnwest2009/
+[mtnwest2009]:        http://github.com/paul/mtnwest2009/blob/master/content/index.txt
+[Grancher]:           http://github.com/judofyr/grancher/tree/master
 
 
