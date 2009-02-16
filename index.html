@@ -15,8 +15,14 @@
    <link rel="stylesheet" href="stylesheets/slides.css" type="text/css" media="projection" id="slideProj" />
    <link rel="stylesheet" href="stylesheets/outline.css" type="text/css" media="screen" id="outlineStyle" />
 
+   <link rel="stylesheet" href="stylesheets/highlight.css" type="text/css" media="screen" />
    <!-- S5 JS -->
    <script src="javascripts/slides.js" type="text/javascript"></script>
+
+   <script src="javascripts/highlight.pack.js" type="text/javascript"></script>
+   <script type="text/javascript">
+     hljs.initHighlightingOnLoad('ruby');
+   </script>
 </head>
 <body>
 
@@ -36,27 +42,6 @@
 <p><a href='psadauskas@gmail.com'>Paul Sadauskas</a> a.k.a <a href='http://twitter.com/TheAmazingRando'>Rando</a></p>
 
 <p><a href='http://absolute-performance.com'>Absolute Performance, Inc</a></p>
-
-</div>
-
-<div class="slide">
-<h1 id='wtf_is_datamapper'>WTF is DataMapper?</h1>
-
-<p>A lightweight, modular Ruby ORM.</p>
-
-<p>Powerful adapter plugins mean its not just for RDBMSs:</p>
-
-<ul class='incremental'>
-<li>Memory</li>
-
-<li><strong>Yaml files</strong></li>
-
-<li>ReSTful web services</li>
-
-<li>CouchDB</li>
-
-<li>High-speed key-value stores (TokyoCabinet)</li>
-</ul>
 
 </div>
 
@@ -86,12 +71,33 @@
 </div>
 
 <div class="slide">
+<h1 id='wtf_is_datamapper'>WTF is DataMapper?</h1>
+
+<p>A lightweight, modular Ruby ORM.</p>
+
+<p>Powerful adapter plugins mean its not just for RDBMSs:</p>
+
+<ul>
+<li>Memory</li>
+
+<li><strong>Yaml files</strong></li>
+
+<li>ReSTful web services</li>
+
+<li>CouchDB</li>
+
+<li>High-speed key-value stores (TokyoCabinet)</li>
+</ul>
+
+</div>
+
+<div class="slide">
 <h1 id='what_makes_up_an_adapter'>What Makes Up an Adapter?</h1>
 
 <p>Just a few simple methods:</p>
 
 <ul>
-<li><code>initialize(name, options = {})</code></li>
+<li><code>initialize(name, uri_or_options)</code></li>
 
 <li><code>create(resources)</code></li>
 
@@ -107,25 +113,109 @@
 <div class="slide">
 <h1 id='initialize'>Initialize</h1>
 
+<pre><code>def initialize(name, uri_or_options)
+  super   # Turns uri_or_options into @options
+
+  @path = FileUtils.mkdir_p(@options[:path])
+end</code></pre>
+
 </div>
 
 <div class="slide">
 <h1 id='createresources'>Create(resources)</h1>
+
+<pre><code>def create(resources)
+  resources.each do |resource|                    # 1
+    update_records(resource.model) do |records|   # 2
+      records[resource.key] = resource.attributes # 3
+    end
+  end
+
+  resources.size                                  # 4
+end</code></pre>
+
+<ol class='handout'>
+<li>resources is a collection of DM::Resource objects</li>
+
+<li><code>#update_records</code> is a helper in yaml adapter that reads all records from the file for a model, yields it to the block, then writes the result back to the file.</li>
+
+<li>Add the attributes (a Hash) for this resource to the records hash.</li>
+
+<li>Return the number of created records. In this case, all of them.</li>
+</ol>
 
 </div>
 
 <div class="slide">
 <h1 id='readquery'>Read(query)</h1>
 
+<pre><code>def read(query)
+  records = records_for(query.model)     # 1
+  filter_records(records, query)         # 2
+end</code></pre>
+
+<ol class='handout'>
+<li><code>#records_for</code> reads all the records from the yaml file for this model. The records in this case is a Hash of <code>{ key =&gt; attrs }</code> pairs, with <code>key</code> being the array of keys for a record, and attrs being a hash of <code>{property_name =&gt; value}</code> pairs of attributes.</li>
+
+<li><code>#filter_records</code> is where all the magic happens. If your data source doesn&#8217;t have any native searching or sorting capabilities, just run your records as an array of attribute hashes though this, and it will destructively remove all the records that don&#8217;t match the query. It will also sort and limit, as needed.</li>
+</ol>
+
 </div>
 
 <div class="slide">
 <h1 id='updateattributes_query'>Update(attributes, query)</h1>
 
+<pre><code>  def update(attributes, query)
+    # Translate the attributes from { Property =&gt; val }
+    # to { :name =&gt; val }
+    attributes = attributes.map do |p,v|
+                   [ p.name, v ] 
+                 end.to_hash
+
+    update_records(query.model) do |records|
+      updated = filter_records(records.values, query)
+      updated.each { |r| r.update(attributes) }        # 1
+      updated.size                                     # 2
+    end
+  end</code></pre>
+
+<ol class='handout'>
+<li>Update the the records that match the query with the new attributes.</li>
+
+<li>Return the number of records that were updated.</li>
+</ol>
+
 </div>
 
 <div class="slide">
 <h1 id='deletequery'>Delete(query)</h1>
+
+<pre><code>  def delete(query)
+    update_records(query.model) do |records|
+      deleted = filter_records(records.values, query).to_set
+      records.delete_if { |_k,r| deleted.include?(r) } # 1
+      deleted.size
+    end
+  end</code></pre>
+
+<ol class='handout'>
+<li>Delete the records that match the query.</li>
+</ol>
+
+</div>
+
+<div class="slide">
+<h1 id='how_do_i_know_my_adapter_works'>How do I Know My Adapter Works?</h1>
+
+<pre><code>describe &#39;DataMapper::Adapters::YamlAdapter&#39; do
+  before :all do
+    @model = Heffalump
+    @string_property  = @model.color
+    @integer_property = @model.num_spots
+  end
+
+  it_should_behave_like &#39;An Adapter&#39;
+end</code></pre>
 
 </div>
 
@@ -143,7 +233,7 @@
 
 <li>Order</li>
 
-<li>Limit</li>
+<li>Limit &amp; Offset</li>
 </ul>
 </li>
 </ul>
@@ -151,32 +241,73 @@
 </div>
 
 <div class="slide">
-<h1 id='how_did_you_make_this_presentation'>How Did You Make this Presentation?</h1>
+<h1 id='query__fields'>Query - Fields</h1>
 
-<ul>
-<li>
-<p><a href='http://webby.rubyforge.org/'>Webby</a> to generate it</p>
+<pre><code>@fields=[
+  #&lt;DataMapper::Property @model=Heffalump @name=:id&gt;, 
+  #&lt;DataMapper::Property @model=Heffalump @name=:color&gt;, 
+  #&lt;DataMapper::Property @model=Heffalump @name=:num_spots&gt;, 
+  #&lt;DataMapper::Property @model=Heffalump @name=:striped&gt;
+]</code></pre>
 
-<ul>
-<li><a href='http://maruku.rubyforge.org/'>Markdown</a> to author it</li>
+</div>
 
-<li><a href='http://meyerweb.com/eric/tools/s5/'>S5</a> to make slides</li>
-</ul>
-</li>
+<div class="slide">
+<h1 id='query__conditions'>Query - Conditions</h1>
 
-<li>
-<p><a href='http://github.com/blog/272-github-pages'>Github Pages</a> to <a href='http://paul.github.com/mtnwest2009/'>host it</a> * <a href='http://github.com/paul/mtnwest2009/blob/master/content/index.txt'>Source</a></p>
-</li>
+<pre><code>@conditions=[
+  [
+    :eql, 
+    #&lt;DataMapper::Property @model=Heffalump @name=:id&gt;, 
+    4
+  ]
+]</code></pre>
 
-<li>
-<p><a href='http://github.com/judofyr/grancher/tree/master'>Grancher</a> to publish it</p>
-</li>
-</ul>
+</div>
 
-<p>&#8217;t&#8217; to toggle slide layout</p></div>
+<div class="slide">
+<h1 id='query__conditions_next'>Query - Conditions (Next)</h1>
+
+<pre><code>@conditions=
+  #&lt;DataMapper::Conditions::AndOperation
+    @operands=[
+      #&lt;DataMapper::Conditions::EqualToComparison
+        @property=#&lt;DataMapper::Property @model=Heffalump @name=:id&gt;, 
+        @value=4
+      &gt;
+    ]
+  &gt;</code></pre>
+
+</div>
+
+<div class="slide">
+<h1 id='query__order'>Query - Order</h1>
+
+<pre><code>@order=[
+  #&lt;DataMapper::Query::Direction:0xb792e804 
+    @direction=:asc, 
+    @property=#&lt;DataMapper::Property @model=Heffalump @name=:id&gt;
+  &gt;
+]</code></pre>
+
+</div>
+
+<div class="slide">
+<h1 id='query__limit__offset'>Query - Limit &amp; Offset</h1>
+
+<pre><code>@limit=20 
+@offset=40</code></pre>
+
+</div>
+
+<div class="slide">
+<h1 id='the_end'>The End</h1>
+
+<p>~ fin ~</p></div>
 
 
 </div>
+
 
 </body>
 </html>
