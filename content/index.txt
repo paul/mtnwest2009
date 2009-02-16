@@ -33,9 +33,8 @@ I'm Paul Sadauskas. Find me on the intarwebs:
 
 DataMapper Hacker:
 
- * Original author of `AbstractAdapter`
- * Wrote the reference adapter, `InMemoryAdapter`
- * Written several adapters for my company.
+ * Designed `AbstractAdapter` API
+ * Wrote initial implementation of the reference adapter, `InMemoryAdapter`
 
 [blog]: http://theamazingrando.com/blog
 
