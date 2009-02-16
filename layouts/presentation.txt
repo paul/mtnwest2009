@@ -20,8 +20,14 @@ filter:
    <link rel="stylesheet" href="stylesheets/slides.css" type="text/css" media="projection" id="slideProj" />
    <link rel="stylesheet" href="stylesheets/outline.css" type="text/css" media="screen" id="outlineStyle" />
 
+   <link rel="stylesheet" href="stylesheets/highlight.css" type="text/css" media="screen" />
    <!-- S5 JS -->
    <script src="javascripts/slides.js" type="text/javascript"></script>
+
+   <script src="javascripts/highlight.pack.js" type="text/javascript"></script>
+   <script type="text/javascript">
+     hljs.initHighlightingOnLoad('ruby');
+   </script>
 </head>
 <body>
 
@@ -37,6 +43,7 @@ filter:
 <div class="presentation">
   <%= @content %>
 </div>
+
 
 </body>
 </html>
