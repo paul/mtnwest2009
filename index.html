@@ -149,7 +149,7 @@ end</code></pre>
 
 <pre><code>def read(query)
   records = records_for(query.model)     # 1
-  filter_records(records, query)         # 2
+  filter_records(records.values, query)  # 2
 end</code></pre>
 
 <ol class='handout'>
@@ -172,8 +172,8 @@ end</code></pre>
 
     update_records(query.model) do |records|
       updated = filter_records(records.values, query)
-      updated.each { |r| r.update(attributes) }        # 1
-      updated.size                                     # 2
+      updated.each { |r| r.update(attributes) }      # 1
+      updated.size                                   # 2
     end
   end</code></pre>
 
