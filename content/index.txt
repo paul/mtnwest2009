@@ -97,7 +97,7 @@ Read(query)
 
     def read(query)
       records = records_for(query.model)     # 1
-      filter_records(records, query)         # 2
+      filter_records(records.values, query)  # 2
     end
 
 1. `#records_for` reads all the records from the yaml file for this model.
@@ -123,8 +123,8 @@ Update(attributes, query)
 
         update_records(query.model) do |records|
           updated = filter_records(records.values, query)
-          updated.each { |r| r.update(attributes) }        # 1
-          updated.size                                     # 2
+          updated.each { |r| r.update(attributes) }      # 1
+          updated.size                                   # 2
         end
       end
 
