@@ -83,7 +83,7 @@ Plugins
  * is-versioned
  * ar-finders
 
-Adapters?
+Adapters
 ===================
 
 Powerful adapter plugins mean its not just for RDBMSs:
@@ -105,6 +105,8 @@ Just a few simple methods:
  * `read(query)`
  * `update(attributes, query)`
  * `delete(query)`
+
+_Only applicable to datamapper/next_
 
 Initialize
 ==================
@@ -225,17 +227,6 @@ Query - Fields
     ]
 
 Query - Conditions
-==================
-
-    @conditions=[
-      [
-        :eql, 
-        #<DataMapper::Property @model=Heffalump @name=:id>, 
-        4
-      ]
-    ]
-
-Query - Conditions (Next)
 ==================
 
     @conditions=
