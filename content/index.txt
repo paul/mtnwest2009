@@ -43,13 +43,57 @@ WTF is DataMapper?
 
 A lightweight, modular Ruby ORM.
 
+ * Lazy Loading
+ * (Strategic) Eager Loading
+ * Plugin Architecture
+ * Non-Relational Database Adapters
+
+Lazy-Loading
+============
+
+The query doesn't hit the adapter until it has to.
+
+    articles = Article.all
+    articles.all(:author => "Paul")
+    articles.all(:published_at.gt => 2.weeks.ago)
+    articles.map { |a| a.title }
+    # => results in this query:
+    # Article.all( :author => "Paul",
+    #              :published_at.gt => 2.weeks.ago )
+
+Strategic-Eager Loading
+=======================
+
+When getting associated models from an object in a collection, get the associated models for all objects in that collection.
+
+    articles.each { |a| a.comments }`
+    # => results in this query:
+    # Comment.all( :article => articles )
+
+Plugins
+=======
+
+ * types - yaml, json, xml, regexp, uuid, csv, ip\_address, uri
+ * migrations
+ * validations - flexible, extensible
+ * timestamps - created\_at, etc
+ * sweatshop - fixtures
+ * is-list, is-nested\_set, is-tree, is-state\_machine
+ * is-searchable
+ * is-versioned
+ * ar-finders
+
+Adapters?
+===================
+
 Powerful adapter plugins mean its not just for RDBMSs:
 
- * Memory
+ * Heap
  * **Yaml files**
  * ReSTful web services
  * CouchDB
  * High-speed key-value stores (TokyoCabinet)
+ * Salesforce, LDAP, Netflix, Google Video, ...
 
 What Makes Up an Adapter?
 ==================
@@ -76,20 +120,22 @@ Create(resources)
 
     def create(resources)
       resources.each do |resource|                    # 1
-        update_records(resource.model) do |records|   # 2
-          records[resource.key] = resource.attributes # 3
+        set_next_key(resource)                        # 2
+        update_records(resource.model) do |records|   # 3
+          records[resource.key] = resource.attributes # 4
         end
       end
 
-      resources.size                                  # 4
+      resources.size                                  # 5
     end
 
 1. resources is a collection of DM::Resource objects
-2. `#update_records` is a helper in yaml adapter that reads all records from 
+1. we need to set the key on any Serial properties
+3. `#update_records` is a helper in yaml adapter that reads all records from 
    the file for a model, yields it to the block, then writes the result back 
    to the file.
-3. Add the attributes (a Hash) for this resource to the records hash.
-4. Return the number of created records. In this case, all of them.
+4. Add the attributes (a Hash) for this resource to the records hash.
+5. Return the number of created records. In this case, all of them.
 {:handout}
 
 Read(query)
@@ -196,7 +242,9 @@ Query - Conditions (Next)
       #<DataMapper::Conditions::AndOperation
         @operands=[
           #<DataMapper::Conditions::EqualToComparison
-            @property=#<DataMapper::Property @model=Heffalump @name=:id>, 
+            @property=#<DataMapper::Property 
+                        @model=Heffalump 
+                        @name=:id>, 
             @value=4
           >
         ]
@@ -208,7 +256,9 @@ Query - Order
     @order=[
       #<DataMapper::Query::Direction:0xb792e804 
         @direction=:asc, 
-        @property=#<DataMapper::Property @model=Heffalump @name=:id>
+        @property=#<DataMapper::Property 
+                    @model=Heffalump 
+                    @name=:id>
       >
     ]
 
