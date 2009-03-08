@@ -73,10 +73,76 @@
 
 <p>A lightweight, modular Ruby ORM.</p>
 
+<ul>
+<li>Lazy Loading</li>
+
+<li>(Strategic) Eager Loading</li>
+
+<li>Plugin Architecture</li>
+
+<li>Non-Relational Database Adapters</li>
+</ul>
+
+</div>
+
+<div class="slide">
+<h1 id='lazyloading'>Lazy-Loading</h1>
+
+<p>The query doesn&#8217;t hit the adapter until it has to.</p>
+
+<pre><code>articles = Article.all
+articles.all(:author =&gt; &quot;Paul&quot;)
+articles.all(:published_at.gt =&gt; 2.weeks.ago)
+articles.map { |a| a.title }
+# =&gt; results in this query:
+# Article.all( :author =&gt; &quot;Paul&quot;,
+#              :published_at.gt =&gt; 2.weeks.ago )</code></pre>
+
+</div>
+
+<div class="slide">
+<h1 id='strategiceager_loading'>Strategic-Eager Loading</h1>
+
+<p>When getting associated models from an object in a collection, get the associated models for all objects in that collection.</p>
+
+<pre><code>articles.each { |a| a.comments }`
+# =&gt; results in this query:
+# Comment.all( :article =&gt; articles )</code></pre>
+
+</div>
+
+<div class="slide">
+<h1 id='plugins'>Plugins</h1>
+
+<ul>
+<li>types - yaml, json, xml, regexp, uuid, csv, ip_address, uri</li>
+
+<li>migrations</li>
+
+<li>validations - flexible, extensible</li>
+
+<li>timestamps - created_at, etc</li>
+
+<li>sweatshop - fixtures</li>
+
+<li>is-list, is-nested_set, is-tree, is-state_machine</li>
+
+<li>is-searchable</li>
+
+<li>is-versioned</li>
+
+<li>ar-finders</li>
+</ul>
+
+</div>
+
+<div class="slide">
+<h1 id='adapters'>Adapters?</h1>
+
 <p>Powerful adapter plugins mean its not just for RDBMSs:</p>
 
 <ul>
-<li>Memory</li>
+<li>Heap</li>
 
 <li><strong>Yaml files</strong></li>
 
@@ -85,6 +151,8 @@
 <li>CouchDB</li>
 
 <li>High-speed key-value stores (TokyoCabinet)</li>
+
+<li>Salesforce, LDAP, Netflix, Google Video, &#8230;</li>
 </ul>
 
 </div>
@@ -124,16 +192,19 @@ end</code></pre>
 
 <pre><code>def create(resources)
   resources.each do |resource|                    # 1
-    update_records(resource.model) do |records|   # 2
-      records[resource.key] = resource.attributes # 3
+    set_next_key(resource)                        # 2
+    update_records(resource.model) do |records|   # 3
+      records[resource.key] = resource.attributes # 4
     end
   end
 
-  resources.size                                  # 4
+  resources.size                                  # 5
 end</code></pre>
 
 <ol class='handout'>
 <li>resources is a collection of DM::Resource objects</li>
+
+<li>we need to set the key on any Serial properties</li>
 
 <li><code>#update_records</code> is a helper in yaml adapter that reads all records from the file for a model, yields it to the block, then writes the result back to the file.</li>
 
@@ -270,7 +341,9 @@ end</code></pre>
   #&lt;DataMapper::Conditions::AndOperation
     @operands=[
       #&lt;DataMapper::Conditions::EqualToComparison
-        @property=#&lt;DataMapper::Property @model=Heffalump @name=:id&gt;, 
+        @property=#&lt;DataMapper::Property 
+                    @model=Heffalump 
+                    @name=:id&gt;, 
         @value=4
       &gt;
     ]
@@ -284,7 +357,9 @@ end</code></pre>
 <pre><code>@order=[
   #&lt;DataMapper::Query::Direction:0xb792e804 
     @direction=:asc, 
-    @property=#&lt;DataMapper::Property @model=Heffalump @name=:id&gt;
+    @property=#&lt;DataMapper::Property 
+                @model=Heffalump 
+                @name=:id&gt;
   &gt;
 ]</code></pre>
 
