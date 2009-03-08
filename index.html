@@ -137,7 +137,7 @@ articles.map { |a| a.title }
 </div>
 
 <div class="slide">
-<h1 id='adapters'>Adapters?</h1>
+<h1 id='adapters'>Adapters</h1>
 
 <p>Powerful adapter plugins mean its not just for RDBMSs:</p>
 
@@ -173,6 +173,8 @@ articles.map { |a| a.title }
 
 <li><code>delete(query)</code></li>
 </ul>
+
+<p><em>Only applicable to datamapper/next</em></p>
 
 </div>
 
@@ -323,19 +325,6 @@ end</code></pre>
 
 <div class="slide">
 <h1 id='query__conditions'>Query - Conditions</h1>
-
-<pre><code>@conditions=[
-  [
-    :eql, 
-    #&lt;DataMapper::Property @model=Heffalump @name=:id&gt;, 
-    4
-  ]
-]</code></pre>
-
-</div>
-
-<div class="slide">
-<h1 id='query__conditions_next'>Query - Conditions (Next)</h1>
 
 <pre><code>@conditions=
   #&lt;DataMapper::Conditions::AndOperation
