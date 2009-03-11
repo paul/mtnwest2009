@@ -53,11 +53,11 @@ Lazy-Loading
 
 The query doesn't hit the adapter until it has to.
 
-    articles = Article.all
-    articles.all(:author => "Paul")
-    articles.all(:published_at.gt => 2.weeks.ago)
-    articles.map { |a| a.title }
-    # => results in this query:
+    r = Article.all
+    r = r.all(:author => "Paul")
+    r = r.all(:published_at.gt => 2.weeks.ago)
+    r.map { |a| a.title }
+    # results in this query:
     # Article.all( :author => "Paul",
     #              :published_at.gt => 2.weeks.ago )
 
@@ -88,10 +88,11 @@ Adapters
 
 Powerful adapter plugins mean its not just for RDBMSs:
 
- * Heap
+ * InMemory
  * **Yaml files**
  * ReSTful web services
  * CouchDB
+ * Sphinx
  * High-speed key-value stores (TokyoCabinet)
  * Salesforce, LDAP, Netflix, Google Video, ...
 
@@ -111,24 +112,51 @@ _Only applicable to datamapper/next_
 Initialize
 ==================
 
-    def initialize(name, uri_or_options)
-      super   # Turns uri_or_options into @options
+    def initialize(name, options)
+      super   # AbstractAdapter does some extra
+              # initilization for you
 
+      # Set up the dir to store the yaml files
       @path = FileUtils.mkdir_p(@options[:path])
     end
 
-Create(resources)
+Create (API)
 ==================
+
+Used by DataMapper to put records into a data-store: "INSERT" in SQL-speak.
+It takes an array of the resources (model instances) to be saved. Resources
+each have a key that can be used to quickly look them up later without
+searching, if the adapter supports it.
+
+param `[Enumerable(Resource)] resources`
+:  The set of resources (model instances)
+
+return `[Enumerable(Resource)]`
+:  The resources that got saved. 
+
+Create (Demo)
+===================
+
+    Article.create(:title => "Test", :text => "Lorem Ipsum")
+
+    # calls Adapter#create(resources)
+    resources # =>
+      [<Article @id=nil @title="Test" @text="Lorem Ipsum">]
+    
+    returns # =>
+      [<Article @id=1 @title="Test" @text="Lorem Ipsum">]
+
+
+Create (YAML Adapter)
+===================
 
     def create(resources)
       resources.each do |resource|                    # 1
-        set_next_key(resource)                        # 2
+        next_serial(resource)                         # 2
         update_records(resource.model) do |records|   # 3
           records[resource.key] = resource.attributes # 4
         end
       end
-
-      resources.size                                  # 5
     end
 
 1. resources is a collection of DM::Resource objects
@@ -137,10 +165,39 @@ Create(resources)
    the file for a model, yields it to the block, then writes the result back 
    to the file.
 4. Add the attributes (a Hash) for this resource to the records hash.
-5. Return the number of created records. In this case, all of them.
 {:handout}
 
-Read(query)
+Read (API)
+==================
+
+Looks up a set of records from the data-store that match the query.
+
+param `[Query] query`
+:  The query to be used to seach for the resources
+
+return `[Enumerable(Hash), Enumerable(Resource)]`
+:  The easiest way it just just return an array of hashes with keys being the 
+  property field names, and the values. eg, `{ "id" => 1, "title" => "Article"}`.
+  If your adapter can build the Resource objects itself, to save time or memory,
+  it can return those instead.
+
+Read (Demo)
+==================
+
+    a = Article.all
+
+    # calls Adapter.read(query)
+    query # =>
+    <DataMapper::Query 
+      @model=Article 
+      @fields=[<DataMapper::Property @model=Article @name=:id>, 
+               <DataMapper::Property @model=Article @name=:title>] 
+      @conditions=[] @links=[] @order=[] @limit=nil @offset=0>
+
+    returns # =>
+    [{:title=>"Test", :text=>"Lorem Ipsum", :id=>1}]
+
+Read (YAML Adapter)
 ==================
 
     def read(query)
@@ -159,36 +216,89 @@ Read(query)
    as needed.
 {:handout}
 
-Update(attributes, query)
+Update (API)
+==================
+
+Used by DataMapper to update the attributes on existing records in a
+data-store.
+
+param `[Hash] attributes`
+: The set of attributes to update with, In the form of `{DataMapper::Property => value}` 
+
+param `[Query] query`
+: The query that should be used to find the resource(s) to update.
+
+return `[boolean, Enumerable(Hash), Enumerable(Resource)]`
+: True if all records matching the query were updated, False if any failed.  Also supports returning the same Hash Array and Resource Array as `#read`.
+
+Update (Demo)
+==================
+
+    a.title = "New Title"
+    a.save
+
+    # calls Adapter#update(attributes, query)
+    attributes # =>
+    { <DataMapper::Property @model=Article @name=:title> =>
+      "Test Update" }
+
+    query # => 
+    <DataMapper::Query 
+    @model=Article 
+    @conditions=<DataMapper::Conditions::AndOperation ... >
+    >
+
+    returns # => true
+
+Update (YAML Adapter)
 ==================
 
       def update(attributes, query)
-        # Translate the attributes from { Property => val }
-        # to { :name => val }
-        attributes = attributes.map do |p,v|
-                       [ p.name, v ] 
-                     end.to_hash
-
         update_records(query.model) do |records|
           updated = filter_records(records.values, query)
           updated.each { |r| r.update(attributes) }      # 1
-          updated.size                                   # 2
         end
+        true
       end
 
 1. Update the the records that match the query with the new attributes.
-2. Return the number of records that were updated.
 {:handout}
 
-Delete(query)
+Delete (API)
+==================
+
+Destroys all the records matching the given query.
+
+param `[Query] query`
+: The query used to locate the resources to be deleted.
+
+return `[boolean, Enumerable(Hash), Enumerable(Resource)]`
+: True if all records matching the query were deleted, False if any failed.  Also supports the same Hash Array and Resource Array as `#read`.
+
+Delete (Demo)
+==================
+
+    a.destroy
+    calls Adapter#delete(query)
+
+    query # => 
+    <DataMapper::Query 
+    @model=Article 
+    @conditions=<DataMapper::Conditions::AndOperation ... >
+    >
+
+    returns # => true
+
+Delete (YAML Adapter)
 ==================
 
       def delete(query)
         update_records(query.model) do |records|
           deleted = filter_records(records.values, query).to_set
           records.delete_if { |_k,r| deleted.include?(r) } # 1
-          deleted.size
         end
+
+        true
       end
 
 1. Delete the records that match the query.
@@ -207,7 +317,7 @@ How do I Know My Adapter Works?
       it_should_behave_like 'An Adapter'
     end
 
-Advanced Topics
+Query
 ==================
 
  * Query
@@ -220,22 +330,22 @@ Query - Fields
 ==================
     
     @fields=[
-      #<DataMapper::Property @model=Heffalump @name=:id>, 
-      #<DataMapper::Property @model=Heffalump @name=:color>, 
-      #<DataMapper::Property @model=Heffalump @name=:num_spots>, 
-      #<DataMapper::Property @model=Heffalump @name=:striped>
+      <DataMapper::Property @model=Heffalump @name=:id>, 
+      <DataMapper::Property @model=Heffalump @name=:color>, 
+      <DataMapper::Property @model=Heffalump @name=:num_spots>, 
+      <DataMapper::Property @model=Heffalump @name=:striped>
     ]
 
 Query - Conditions
 ==================
 
     @conditions=
-      #<DataMapper::Conditions::AndOperation
+      <DataMapper::Conditions::AndOperation
         @operands=[
-          #<DataMapper::Conditions::EqualToComparison
-            @property=#<DataMapper::Property 
-                        @model=Heffalump 
-                        @name=:id>, 
+          <DataMapper::Conditions::EqualToComparison
+            @property=<DataMapper::Property 
+                       @model=Heffalump 
+                       @name=:id>, 
             @value=4
           >
         ]
@@ -245,9 +355,9 @@ Query - Order
 ==================
 
     @order=[
-      #<DataMapper::Query::Direction:0xb792e804 
+      <DataMapper::Query::Direction:0xb792e804 
         @direction=:asc, 
-        @property=#<DataMapper::Property 
+        @property=<DataMapper::Property 
                     @model=Heffalump 
                     @name=:id>
       >
@@ -267,3 +377,4 @@ The End
 
 
 {:handout: class=handout}
+{:nohighlight: class=no-highlight}
