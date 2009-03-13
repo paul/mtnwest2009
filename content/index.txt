@@ -114,7 +114,7 @@ Initialize
 
     def initialize(name, options)
       super   # AbstractAdapter does some extra
-              # initilization for you
+              # initialization for you
 
       # Set up the dir to store the yaml files
       @path = FileUtils.mkdir_p(@options[:path])
