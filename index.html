@@ -39,7 +39,7 @@
   <div class="slide">
 <h1 id='writing_datamapper_adapters'>Writing DataMapper Adapters</h1>
 
-<p><a href='psadauskas@gmail.com'>Paul Sadauskas</a> a.k.a <a href='http://twitter.com/TheAmazingRando'>Rando</a></p>
+<p><a href='psadauskas@gmail.com'>Paul Sadauskas</a> a.k.a <a href='http://twitter.com/TheAmazingRando'>@Rando</a></p>
 
 <p><a href='http://absolute-performance.com'>Absolute Performance, Inc</a></p>
 
@@ -51,11 +51,11 @@
 <p>I&#8217;m Paul Sadauskas. Find me on the intarwebs:</p>
 
 <ul>
-<li>irc: Rando@irc.freenode.net</li>
-
 <li>xmpp: <a href='psadauskas@gmail.com'>psadauskas@gmail.com</a></li>
 
 <li>www: <a href='http://theamazingrando.com/blog'>TheAmazingRando.com/blog</a></li>
+
+<li>git: <a href='http://github.com/paul'>github.com/paul</a></li>
 </ul>
 
 <p>DataMapper Hacker:</p>
@@ -82,6 +82,14 @@
 
 <li>Non-Relational Database Adapters</li>
 </ul>
+
+<blockquote class='handout'>
+<ul>
+<li>ORM is actually a degenerate subset of what DM is.</li>
+
+<li>DM spends a lot of time bikeshedding. Anytime we can&#8217;t agree, there&#8217;s a plugin api.</li>
+</ul>
+</blockquote>
 
 </div>
 
@@ -162,7 +170,7 @@ r.map { |a| a.title }
 <div class="slide">
 <h1 id='what_makes_up_an_adapter'>What Makes Up an Adapter?</h1>
 
-<p>Just a few simple methods:</p>
+<p>The primary goal of if the adapter API is to make adapters as easy as possible to write. You only need to write a few simple methods:</p>
 
 <ul>
 <li><code>initialize(name, uri_or_options)</code></li>
@@ -208,6 +216,8 @@ end</code></pre>
 <dd>The resources that got saved.</dd>
 </dl>
 
+<p><strong>Wall of Text Crits you for 100HP!</strong></p>
+
 </div>
 
 <div class="slide">
@@ -239,9 +249,9 @@ end</code></pre>
 <ol class='handout'>
 <li>resources is a collection of DM::Resource objects</li>
 
-<li>we need to set the key on any Serial properties</li>
+<li><code>#next_serial</code> is a mediocre method that tries to determine the next available id.</li>
 
-<li><code>#update_records</code> is a helper in yaml adapter that reads all records from the file for a model, yields it to the block, then writes the result back to the file.</li>
+<li><code>#update_records</code> is a helper in yaml adapter that reads all records from the file for a model, yields them to the block, then writes the result back to the file.</li>
 
 <li>Add the attributes (a Hash) for this resource to the records hash.</li>
 </ol>
@@ -337,7 +347,8 @@ query # =&gt;
 @conditions=&lt;DataMapper::Conditions::AndOperation ... &gt;
 &gt;
 
-returns # =&gt; true</code></pre>
+returns # =&gt; 
+[{:title=&gt;&quot;Test Update&quot;, :text=&gt;&quot;Lorem Ipsum&quot;, :id=&gt;1}]</code></pre>
 
 </div>
 
@@ -349,11 +360,13 @@ returns # =&gt; true</code></pre>
       updated = filter_records(records.values, query)
       updated.each { |r| r.update(attributes) }      # 1
     end
-    true
+    updated                                          # 2
   end</code></pre>
 
 <ol class='handout'>
 <li>Update the the records that match the query with the new attributes.</li>
+
+<li>Return the updated records</li>
 </ol>
 
 </div>
@@ -387,7 +400,8 @@ query # =&gt;
 @conditions=&lt;DataMapper::Conditions::AndOperation ... &gt;
 &gt;
 
-returns # =&gt; true</code></pre>
+returns # =&gt; 
+[{:title=&gt;&quot;Test Update&quot;, :text=&gt;&quot;Lorem Ipsum&quot;, :id=&gt;1}]</code></pre>
 
 </div>
 
@@ -399,12 +413,13 @@ returns # =&gt; true</code></pre>
       deleted = filter_records(records.values, query).to_set
       records.delete_if { |_k,r| deleted.include?(r) } # 1
     end
-
-    true
+    deleted                                            # 2
   end</code></pre>
 
 <ol class='handout'>
 <li>Delete the records that match the query.</li>
+
+<li>Return the records that were deleted.</li>
 </ol>
 
 </div>
@@ -499,7 +514,9 @@ end</code></pre>
 <div class="slide">
 <h1 id='the_end'>The End</h1>
 
-<p>~ fin ~</p></div>
+<p>~ fin ~</p>
+
+<p>Find these slides on github: <a href='http://paul.github.com/mtnwest2009/'>http://paul.github.com/mtnwest2009/</a></p></div>
 
 
 </div>
