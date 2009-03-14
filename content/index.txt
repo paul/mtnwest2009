@@ -384,7 +384,7 @@ The End
 
  ~ fin ~
 
-
+Find these slides on github: [http://paul.github.com/mtnwest2009/](http://paul.github.com/mtnwest2009/)
 
 {:handout: class=handout}
 {:nohighlight: class=no-highlight}
